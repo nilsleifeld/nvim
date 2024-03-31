@@ -7,17 +7,17 @@ return {
 
 		harpoon:setup()
 
-		vim.keymap.set("n", "<leader>a", function()
+		vim.keymap.set("n", "<leader>ha", function()
 			harpoon:list():append()
-		end)
-		vim.keymap.set("n", "<leader>f", function()
+		end, { desc = "Append file to Harpoon" })
+		vim.keymap.set("n", "<leader>hl", function()
 			harpoon.ui:toggle_quick_menu(harpoon:list())
-		end)
+		end, { desc = "Toggle Harpoon menu" })
 
-		vim.keymap.set("n", "<tab>", function()
+		vim.keymap.set("n", "<leader><tab>", function()
 			harpoon:list():next({
 				ui_nav_wrap = true,
 			})
-		end)
+		end, { desc = "Next Harpoon window" })
 	end,
 }
