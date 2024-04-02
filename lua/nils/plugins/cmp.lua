@@ -59,30 +59,49 @@ return {
 			end,
 		},
 		"saadparwaiz1/cmp_luasnip",
-
-		-- Adds other completion capabilities.
-		--  nvim-cmp does not ship with all sources by default. They are split
-		--  into multiple repos for maintenance purposes.
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-path",
-
-		-- If you want to add a bunch of pre-configured snippets,
-		--    you can use this plugin to help you. It even has snippets
-		--    for various frameworks/libraries/etc. but you will have to
-		--    set up the ones that are useful for you.
-		-- 'rafamadriz/friendly-snippets',
+		"onsails/lspkind.nvim",
 	},
 	config = function()
-		-- See `:help cmp`
+		local types = require("cmp.types")
+		local str = require("cmp.utils.str")
+		local lspkind = require("lspkind")
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
 		luasnip.config.setup({})
 
 		cmp.setup({
+			formatting = {
+				format = lspkind.cmp_format({
+					before = function(entry, vim_item)
+						local word = entry:get_insert_text()
+						if entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet then
+							word = vim.lsp.util.parse_snippet(word)
+						end
+						word = str.oneline(word)
+
+						if
+							entry.completion_item.insertTextFormat == types.lsp.InsertTextFormat.Snippet
+							and string.sub(vim_item.abbr, -1, -1) == "~"
+						then
+							word = word .. "~"
+						end
+						vim_item.abbr = word
+
+						return vim_item
+					end,
+				}),
+			},
 			snippet = {
 				expand = function(args)
 					luasnip.lsp_expand(args.body)
 				end,
+			},
+			window = {
+				completion = {
+					scrollbar = false,
+				},
 			},
 			completion = { completeopt = "menu,menuone,noinsert" },
 
