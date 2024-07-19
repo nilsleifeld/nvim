@@ -19,7 +19,7 @@ return {
 			css = { { "prettierd", "prettier" } },
 			scss = { { "prettierd", "prettier" } },
 			lua = { "stylua" },
-			templ = {},
+			templ = { "templ" },
 		},
 	},
 }
